@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.3
+-- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 31. Jan 2024 um 11:40
--- Server-Version: 10.4.14-MariaDB
--- PHP-Version: 7.4.11
+-- Erstellungszeit: 30. Okt 2024 um 11:01
+-- Server-Version: 10.4.17-MariaDB
+-- PHP-Version: 7.4.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -27,10 +27,11 @@ SET time_zone = "+00:00";
 -- Tabellenstruktur für Tabelle `ausbildungsberufe`
 --
 
-CREATE TABLE `ausbildungsberufe` (
-  `id` int(11) NOT NULL,
-  `berufsbezeichnung` varchar(64) COLLATE latin1_german1_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+CREATE TABLE IF NOT EXISTS `ausbildungsberufe` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `berufsbezeichnung` varchar(64) COLLATE latin1_german1_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 --
 -- Daten für Tabelle `ausbildungsberufe`
@@ -49,11 +50,13 @@ INSERT INTO `ausbildungsberufe` (`id`, `berufsbezeichnung`) VALUES
 -- Tabellenstruktur für Tabelle `fragekomplex`
 --
 
-CREATE TABLE `fragekomplex` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `fragekomplex` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fragekomplex` text COLLATE latin1_german1_ci NOT NULL,
-  `pruefungsteil` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+  `pruefungsteil` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_fragekomplex_pruefungsteile` (`pruefungsteil`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 --
 -- Daten für Tabelle `fragekomplex`
@@ -86,14 +89,122 @@ INSERT INTO `fragekomplex` (`id`, `fragekomplex`, `pruefungsteil`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `fragekomplex-lernfeld`
+--
+
+CREATE TABLE IF NOT EXISTS `fragekomplex-lernfeld` (
+  `lernfeldzuordnung_beruf` int(11) NOT NULL,
+  `lernfeldzuordnung_lernfeld` int(11) NOT NULL,
+  `fragekomplex_id` int(11) NOT NULL,
+  PRIMARY KEY (`fragekomplex_id`,`lernfeldzuordnung_lernfeld`,`lernfeldzuordnung_beruf`),
+  KEY `fk_themenkreis-lernfeld_lernfeldzuordnung1_idx` (`lernfeldzuordnung_beruf`,`lernfeldzuordnung_lernfeld`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `fragekomplex-lernfeld`
+--
+
+INSERT INTO `fragekomplex-lernfeld` (`lernfeldzuordnung_beruf`, `lernfeldzuordnung_lernfeld`, `fragekomplex_id`) VALUES
+(1, 1, 1),
+(2, 1, 1),
+(1, 2, 1),
+(2, 2, 1),
+(1, 3, 1),
+(2, 3, 1),
+(1, 5, 1),
+(2, 5, 1),
+(1, 1, 2),
+(2, 1, 2),
+(1, 2, 2),
+(2, 2, 2),
+(1, 2, 3),
+(2, 2, 3),
+(1, 3, 3),
+(2, 3, 3),
+(1, 5, 4),
+(2, 5, 4),
+(1, 3, 5),
+(2, 3, 5),
+(1, 5, 5),
+(2, 5, 5),
+(1, 6, 5),
+(2, 6, 5),
+(1, 4, 6),
+(2, 4, 6),
+(1, 2, 7),
+(2, 2, 7),
+(1, 3, 7),
+(2, 3, 7),
+(1, 6, 7),
+(2, 6, 7),
+(1, 3, 8),
+(1, 6, 8),
+(1, 9, 8),
+(1, 12, 8),
+(1, 2, 9),
+(1, 3, 9),
+(1, 9, 9),
+(1, 5, 10),
+(1, 6, 10),
+(1, 7, 10),
+(1, 8, 10),
+(1, 10, 10),
+(1, 11, 10),
+(1, 12, 10),
+(1, 1, 11),
+(1, 2, 11),
+(1, 5, 11),
+(1, 6, 11),
+(1, 8, 11),
+(1, 11, 11),
+(1, 12, 11),
+(1, 4, 12),
+(1, 8, 12),
+(1, 9, 12),
+(1, 11, 12),
+(1, 3, 13),
+(1, 4, 13),
+(1, 5, 13),
+(1, 6, 13),
+(1, 7, 13),
+(1, 8, 13),
+(1, 9, 13),
+(1, 10, 13),
+(1, 11, 13),
+(1, 12, 13),
+(1, 4, 14),
+(1, 5, 14),
+(1, 8, 14),
+(1, 9, 14),
+(1, 5, 15),
+(1, 10, 15),
+(1, 11, 15),
+(1, 12, 15),
+(1, 5, 16),
+(1, 7, 16),
+(1, 8, 16),
+(1, 10, 16),
+(1, 11, 16),
+(1, 12, 16),
+(1, 5, 17),
+(1, 8, 17),
+(1, 10, 17),
+(1, 11, 17),
+(1, 12, 17);
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `lernfelddetail`
 --
 
-CREATE TABLE `lernfelddetail` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `lernfelddetail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `lernfeld` int(11) DEFAULT NULL,
-  `text` text COLLATE latin1_german1_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+  `text` text COLLATE latin1_german1_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_lernfelddetail_lernfelder` (`lernfeld`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 --
 -- Daten für Tabelle `lernfelddetail`
@@ -131,13 +242,14 @@ INSERT INTO `lernfelddetail` (`id`, `lernfeld`, `text`) VALUES
 -- Tabellenstruktur für Tabelle `lernfelder`
 --
 
-CREATE TABLE `lernfelder` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `lernfelder` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `kurzbezeichnung` varchar(10) COLLATE latin1_german1_ci NOT NULL DEFAULT '',
   `bezeichung` varchar(128) COLLATE latin1_german1_ci NOT NULL,
   `zeitrichtwert` int(11) DEFAULT NULL,
-  `ausbildungsjahr` int(2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+  `ausbildungsjahr` int(2) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 --
 -- Daten für Tabelle `lernfelder`
@@ -175,9 +287,11 @@ INSERT INTO `lernfelder` (`id`, `kurzbezeichnung`, `bezeichung`, `zeitrichtwert`
 -- Tabellenstruktur für Tabelle `lernfeldzuordnung`
 --
 
-CREATE TABLE `lernfeldzuordnung` (
+CREATE TABLE IF NOT EXISTS `lernfeldzuordnung` (
   `beruf` int(11) NOT NULL,
-  `lernfeld` int(11) NOT NULL
+  `lernfeld` int(11) NOT NULL,
+  PRIMARY KEY (`beruf`,`lernfeld`),
+  KEY `FK__lernfelder` (`lernfeld`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 --
@@ -252,10 +366,11 @@ INSERT INTO `lernfeldzuordnung` (`beruf`, `lernfeld`) VALUES
 -- Tabellenstruktur für Tabelle `pruefungsteile`
 --
 
-CREATE TABLE `pruefungsteile` (
-  `id` int(11) NOT NULL,
-  `bezeichnung` varchar(128) COLLATE latin1_german1_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+CREATE TABLE IF NOT EXISTS `pruefungsteile` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `bezeichnung` varchar(128) COLLATE latin1_german1_ci DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 --
 -- Daten für Tabelle `pruefungsteile`
@@ -273,11 +388,13 @@ INSERT INTO `pruefungsteile` (`id`, `bezeichnung`) VALUES
 -- Tabellenstruktur für Tabelle `themenkreisdetails`
 --
 
-CREATE TABLE `themenkreisdetails` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `themenkreisdetails` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `detail` text COLLATE latin1_german1_ci NOT NULL,
-  `themenkreis` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+  `themenkreis` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `themenkreis` (`themenkreis`)
+) ENGINE=InnoDB AUTO_INCREMENT=561 DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 --
 -- Daten für Tabelle `themenkreisdetails`
@@ -843,11 +960,13 @@ INSERT INTO `themenkreisdetails` (`id`, `detail`, `themenkreis`) VALUES
 -- Tabellenstruktur für Tabelle `themenkreise`
 --
 
-CREATE TABLE `themenkreise` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `themenkreise` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `themenkreis` text COLLATE latin1_german1_ci NOT NULL,
-  `fragekomplaex` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+  `fragekomplaex` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fragekomplaex` (`fragekomplaex`)
+) ENGINE=InnoDB AUTO_INCREMENT=146 DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
 --
 -- Daten für Tabelle `themenkreise`
@@ -1000,109 +1119,6 @@ INSERT INTO `themenkreise` (`id`, `themenkreis`, `fragekomplaex`) VALUES
 (145, '', 22);
 
 --
--- Indizes der exportierten Tabellen
---
-
---
--- Indizes für die Tabelle `ausbildungsberufe`
---
-ALTER TABLE `ausbildungsberufe`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `fragekomplex`
---
-ALTER TABLE `fragekomplex`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_fragekomplex_pruefungsteile` (`pruefungsteil`);
-
---
--- Indizes für die Tabelle `lernfelddetail`
---
-ALTER TABLE `lernfelddetail`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_lernfelddetail_lernfelder` (`lernfeld`);
-
---
--- Indizes für die Tabelle `lernfelder`
---
-ALTER TABLE `lernfelder`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `lernfeldzuordnung`
---
-ALTER TABLE `lernfeldzuordnung`
-  ADD PRIMARY KEY (`beruf`,`lernfeld`),
-  ADD KEY `FK__lernfelder` (`lernfeld`);
-
---
--- Indizes für die Tabelle `pruefungsteile`
---
-ALTER TABLE `pruefungsteile`
-  ADD PRIMARY KEY (`id`) USING BTREE;
-
---
--- Indizes für die Tabelle `themenkreisdetails`
---
-ALTER TABLE `themenkreisdetails`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `themenkreis` (`themenkreis`);
-
---
--- Indizes für die Tabelle `themenkreise`
---
-ALTER TABLE `themenkreise`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fragekomplaex` (`fragekomplaex`);
-
---
--- AUTO_INCREMENT für exportierte Tabellen
---
-
---
--- AUTO_INCREMENT für Tabelle `ausbildungsberufe`
---
-ALTER TABLE `ausbildungsberufe`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT für Tabelle `fragekomplex`
---
-ALTER TABLE `fragekomplex`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
-
---
--- AUTO_INCREMENT für Tabelle `lernfelddetail`
---
-ALTER TABLE `lernfelddetail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
-
---
--- AUTO_INCREMENT für Tabelle `lernfelder`
---
-ALTER TABLE `lernfelder`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
-
---
--- AUTO_INCREMENT für Tabelle `pruefungsteile`
---
-ALTER TABLE `pruefungsteile`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT für Tabelle `themenkreisdetails`
---
-ALTER TABLE `themenkreisdetails`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=561;
-
---
--- AUTO_INCREMENT für Tabelle `themenkreise`
---
-ALTER TABLE `themenkreise`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=146;
-
---
 -- Constraints der exportierten Tabellen
 --
 
@@ -1111,6 +1127,13 @@ ALTER TABLE `themenkreise`
 --
 ALTER TABLE `fragekomplex`
   ADD CONSTRAINT `FK_fragekomplex_pruefungsteile` FOREIGN KEY (`pruefungsteil`) REFERENCES `pruefungsteile` (`id`);
+
+--
+-- Constraints der Tabelle `fragekomplex-lernfeld`
+--
+ALTER TABLE `fragekomplex-lernfeld`
+  ADD CONSTRAINT `fk_themenkreis-lernfeld_fragekomplex1` FOREIGN KEY (`fragekomplex_id`) REFERENCES `fragekomplex` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_themenkreis-lernfeld_lernfeldzuordnung1` FOREIGN KEY (`lernfeldzuordnung_beruf`,`lernfeldzuordnung_lernfeld`) REFERENCES `lernfeldzuordnung` (`beruf`, `lernfeld`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints der Tabelle `lernfelddetail`
